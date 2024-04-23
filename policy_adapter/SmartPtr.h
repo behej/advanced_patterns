@@ -3,11 +3,18 @@
 
 using namespace std;
 
-template <typename T>
+template <typename T, typename DeletionPolicy>
 class SmartPtr
 {
 public:
-    explicit SmartPtr(T *p = nullptr) : m_p(p)
+    /* Note: le 2e parametre par defaut n'est pas la construction d'un objet de type DeletionPolicy,
+    mais l'operateur () sur le type du template.
+    Pas besoin qu'une classe 'DeletionPolicy' existe, mais simplement que l'operateur () soit implementé
+    pour le type qui sera passe en tant que DeletionPolicy.
+    On peut s'appuyer implicitement sur l'operateur () du type declare.
+    Ou on peut passer une fonction en parametre du constructeur.
+    */
+    explicit SmartPtr(T *p = nullptr, const DeletionPolicy &deletion_policy = DeletionPolicy()) : m_p(p), m_deletion_policy(deletion_policy)
     {
         cout << "Ctor" << endl;
     }
@@ -15,7 +22,7 @@ public:
     ~SmartPtr()
     {
         cout << "Dtor" << endl;
-        delete m_p;
+        m_deletion_policy(m_p);
     }
 
     T *operator->()
@@ -40,6 +47,7 @@ public:
 
 private:
     T *m_p;
+    DeletionPolicy m_deletion_policy;
     SmartPtr(const SmartPtr &) = delete;
     SmartPtr &operator=(const SmartPtr &) = delete;
 };
