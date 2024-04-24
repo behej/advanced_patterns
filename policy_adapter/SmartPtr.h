@@ -1,9 +1,11 @@
 #ifndef _SMART_PTR_H_
 #define _SMART_PTR_H_
 
+#include "DeletionPolicy.h"
+
 using namespace std;
 
-template <typename T, typename DeletionPolicy>
+template <typename T, typename DeletionPolicy = DeleteByOperator>
 class SmartPtr
 {
 public:
