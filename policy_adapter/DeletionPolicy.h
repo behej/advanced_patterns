@@ -5,9 +5,9 @@
 
 using namespace std;
 
+template <typename T>
 struct DeleteByOperator
 {
-    template <typename T>
     void operator()(T *p) const
     {
         cout << "Delete by operator()" << endl;

@@ -5,7 +5,12 @@
 
 using namespace std;
 
-template <typename T, typename DeletionPolicy = DeleteByOperator>
+/* template template
+SmartPtr is templated class using 2 types: T and DeletionPolicy.
+* T is a standard templated type (can be and int, a float, etc.)
+* DeletionPolicy type has to be a template (ex: MyType<T>)
+*/
+template <typename T, template <typename> typename DeletionPolicy = DeleteByOperator>
 class SmartPtr
 {
 public:
@@ -16,7 +21,7 @@ public:
     On peut s'appuyer implicitement sur l'operateur () du type declare.
     Ou on peut passer une fonction en parametre du constructeur.
     */
-    explicit SmartPtr(T *p = nullptr, const DeletionPolicy &deletion_policy = DeletionPolicy()) : m_p(p), m_deletion_policy(deletion_policy)
+    explicit SmartPtr(T *p = nullptr, const DeletionPolicy<T> &deletion_policy = DeletionPolicy<T>()) : m_p(p), m_deletion_policy(deletion_policy)
     {
         cout << "Ctor" << endl;
     }
@@ -49,7 +54,7 @@ public:
 
 private:
     T *m_p;
-    DeletionPolicy m_deletion_policy;
+    DeletionPolicy<T> m_deletion_policy;
     SmartPtr(const SmartPtr &) = delete;
     SmartPtr &operator=(const SmartPtr &) = delete;
 };
